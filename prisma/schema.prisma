@@ -7,177 +7,345 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id          String   @id @default(cuid())
-    firstName   String
-    lastName    String
-    email       String   @unique
-    gender      Gender
-    nationality String?
-    phone       String?  @unique
-    address     String?  @db.Text
-    address2    String?  @db.Text
-    city        String?
-    zip         String?
-    photo       String?  @db.Text
-    birthday    DateTime
-    bloodType   String?
-    religion    String?
-    role        Role
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+model Teacher {
+    id                String         @id @default(cuid())
+    firstName         String
+    lastName          String
+    email             String         @unique
+    phoneNumber       String?        @unique
+    dateOfBirth       DateTime
+    gender            Gender
+    maritalStatus     MaritalStatus?
+    occupation        String?
+    nationality       String?
+    addressLine1      String?
+    addressLine2      String?
+    city              String?
+    state             String?
+    postalCode        String?
+    country           String?
+    profilePictureUrl String?
+    emergencyContact  String?
+    emergencyPhone    String?
+    active            Boolean        @default(false)
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
 }
 
-model Semester {
-    id            String          @id @default(cuid())
-    name          String
-    startDate     DateTime
-    endDate       DateTime
-    createdAt     DateTime        @default(now())
-    updatedAt     DateTime        @updatedAt
-    schoolSession SchoolSession[]
-    course        Course[]
-    examRule      ExamRule[]
-}
-
-model SchoolSession {
-    id          String        @id @default(cuid())
-    name        String
-    createdAt   DateTime      @default(now())
-    updatedAt   DateTime      @updatedAt
-    semester    Semester?     @relation(fields: [semesterId], references: [id])
-    semesterId  String?
-    schoolClass SchoolClass[]
-    section     Section[]
-    course      Course[]
-    promotion   Promotion[]
-    examRule    ExamRule[]
-    exam        Exam[]
-    gradeRule   GradeRule[]
-}
-
-model SchoolClass {
-    id              String         @id @default(cuid())
-    name            String
-    createdAt       DateTime       @default(now())
-    updatedAt       DateTime       @updatedAt
-    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolSessionId String?
-    section         Section[]
-    course          Course[]
-    promotion       Promotion[]
-    Mark            Mark[]
-}
-
-model Section {
-    id              String         @id @default(cuid())
-    name            String
-    roomNo          String?
-    createdAt       DateTime       @default(now())
-    updatedAt       DateTime       @updatedAt
-    schoolSessionId String?
-    schoolClassId   String?
-    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolClasses   SchoolClass?   @relation(fields: [schoolClassId], references: [id])
-    promotions      Promotion[]
-    mark            Mark[]
-}
-
-model Course {
-    id              String         @id @default(cuid())
-    name            String
-    code            String
-    description     String?
-    SchoolClass     SchoolClass?   @relation(fields: [schoolClassId], references: [id])
-    schoolClassId   String?
-    Semester        Semester?      @relation(fields: [semesterId], references: [id])
-    semesterId      String?
-    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolSessionId String?
-    Mark            Mark[]
-}
-
-model AcademicSetting {
-    id String @id @default(cuid())
+model Parent {
+    id                String         @id @default(cuid())
+    firstName         String
+    lastName          String
+    email             String         @unique
+    phoneNumber       String?        @unique
+    dateOfBirth       DateTime
+    gender            Gender
+    maritalStatus     MaritalStatus?
+    occupation        String?
+    nationality       String?
+    addressLine1      String?
+    addressLine2      String?
+    city              String?
+    state             String?
+    postalCode        String?
+    country           String?
+    profilePictureUrl String?
+    emergencyContact  String?
+    emergencyPhone    String?
+    children          Student[]
+    active            Boolean        @default(false)
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
 }
 
 model Student {
+    id               String      @id @default(cuid())
+    firstName        String
+    middleName       String?
+    lastName         String
+    email            String      @unique
+    phoneNumber      String?
+    gender           Gender
+    dateOfBirth      DateTime
+    nationality      String?
+    emergencyContact String?
+    emergencyPhone   String?
+    parents          Parent[]
+    promotions       Promotion[]
+    active           Boolean     @default(false)
+    createdAt        DateTime    @default(now())
+    updatedAt        DateTime    @updatedAt
+}
+
+model Session {
     id         String      @id @default(cuid())
+    name       String
+    semesters  Semester[]
+    classes    Class[]
+    sections   Section[]
+    courses    Course[]
     promotions Promotion[]
-    marks      Mark[]
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+}
+
+model Semester {
+    id        String   @id @default(cuid())
+    name      String
+    startDate DateTime
+    endDate   DateTime
+    sessionId String?
+    session   Session? @relation(fields: [sessionId], references: [id])
+    courses   Course[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Class {
+    id         String      @id @default(cuid())
+    name       String
+    sessionId  String
+    session    Session?    @relation(fields: [sessionId], references: [id])
+    sections   Section[]
+    courses    Course[]
+    promotions Promotion[]
+}
+
+model Section {
+    id         String      @id @default(cuid())
+    name       String
+    roomNo     String
+    classId    String
+    class      Class       @relation(fields: [classId], references: [id])
+    sessionId  String
+    session    Session     @relation(fields: [sessionId], references: [id])
+    promotions Promotion[]
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+}
+
+model Course {
+    id         String   @id @default(cuid())
+    name       String
+    type       String
+    classId    String
+    class      Class    @relation(fields: [classId], references: [id])
+    semesterId String
+    semester   Semester @relation(fields: [semesterId], references: [id])
+    sessionId  String
+    session    Session  @relation(fields: [sessionId], references: [id])
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model AcademicSetting {
+    id                    String   @id @default(cuid())
+    attendanceType        String   @default("section")
+    marksSubmissionStatus String   @default("off")
+    createdAt             DateTime @default(now())
+    updatedAt             DateTime @updatedAt
 }
 
 model Promotion {
-    id              String         @id @default(cuid())
-    student         Student?       @relation(fields: [studentId], references: [id])
-    studentId       String?
-    schoolClass     SchoolClass?   @relation(fields: [schoolClassId], references: [id])
-    schoolClassId   String?
-    section         Section?       @relation(fields: [sectionId], references: [id])
-    sectionId       String?
-    schoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolSessionId String?
+    id        String   @id @default(cuid())
+    studentId String
+    student   Student  @relation(fields: [studentId], references: [id])
+    classId   String
+    class     Class    @relation(fields: [classId], references: [id])
+    sectionId String
+    section   Section  @relation(fields: [sectionId], references: [id])
+    sessionId String
+    session   Session  @relation(fields: [sessionId], references: [id])
+    idCardNo  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model ExamRule {
-    id              String         @id @default(cuid())
-    totalMarks      Float
-    passMarks       Float
-    notes           String?
-    semester        Semester?      @relation(fields: [semesterId], references: [id])
-    semesterId      String?
-    schoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolSessionId String?
-}
-
-model GradingSystem {
-    id        String      @id @default(cuid())
-    gradeRule GradeRule[]
-}
-
-model Exam {
-    id              String         @id @default(cuid())
-    marks           Mark[]
-    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolSessionId String?
+    id         String   @id @default(cuid())
+    totalMarks Float
+    passMarks  Float
+    notes      String?
+    examId     String
+    sessionId  String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 }
 
 model GradeRule {
-    id              String         @id @default(cuid())
+    id              String   @id @default(cuid())
     point           Float
     grade           String
     startMarks      Float
     endMarks        Float
-    GradingSystem   GradingSystem? @relation(fields: [gradingSystemId], references: [id])
-    gradingSystemId String?
-    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
-    schoolSessionId String?
+    gradingSystemId String
+    sessionId       String
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
 }
 
 model Mark {
-    id            String       @id @default(cuid())
-    student       Student?     @relation(fields: [studentId], references: [id])
-    studentId     String?
-    course        Course?      @relation(fields: [courseId], references: [id])
-    courseId      String?
-    schoolClass   SchoolClass? @relation(fields: [schoolClassId], references: [id])
-    schoolClassId String?
-    section       Section?     @relation(fields: [sectionId], references: [id])
-    sectionId     String?
-    exam          Exam?        @relation(fields: [examId], references: [id])
-    examId        String?
+    id        String   @id @default(cuid())
+    marks     Float    @default(0)
+    studentId String
+    classId   String
+    sectionId String
+    courseId  String
+    examId    String
+    sessionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Exam {
+    id         String   @id @default(cuid())
+    name       String
+    startDate  DateTime
+    endDate    DateTime
+    classId    String
+    courseId   String
+    semesterId String
+    sessionId  String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model StudentAcademicInfo {
+    id         String   @id @default(cuid())
+    studentId  String
+    boardRegNo String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model Attendance {
+    id        String @id @default(cuid())
+    courseId  String
+    classId   String
+    sectionId String
+    studentId String
+    status    String
+    sessionId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Notice {
+    id        String   @id @default(cuid())
+    title     String
+    message   String
+    sessionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Event {
+    id        String   @id @default(cuid())
+    title     String
+    start     DateTime
+    end       DateTime
+    sessionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Syllabus {
+    id        String   @id @default(cuid())
+    name      String
+    filePath  String
+    classId   String
+    courseId  String
+    sessionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Routine {
+    id        String   @id @default(cuid())
+    start     DateTime
+    end       DateTime
+    weekday   Int
+    classId   String
+    sectionId String
+    courseId  String
+    sessionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model AssignedTeacher {
+    id        String   @id @default(cuid())
+    teacherId String
+    semsterId String
+    classId   String
+    sectionId String
+    courseId  String
+    sessionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model GradingSystem {
+    id         String   @id @default(cuid())
+    name       String
+    classId    String
+    semesterId String
+    sessionId  String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model FinalMarks {
+    id              String   @id @default(cuid())
+    calculatedMarks Float    @default(0)
+    finalMarks      Float    @default(0)
+    note            String?  @db.Text
+    studentId       String
+    classId         String
+    sectionId       String
+    courseId        String
+    semesterId      String
+    sessionId       String
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
 }
 
 model Assignment {
-    id String @id @default(cuid())
-}
-
-enum Role {
-    ADMIN
-    USER
+    id                 String   @id @default(cuid())
+    teacherId          String
+    semesterId         String
+    classId            String
+    sectionId          String
+    courseId           String
+    sessionId          String
+    assignmentName     String
+    assignmentFilePath String
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
 }
 
 enum Gender {
     MALE
     FEMALE
+}
+
+enum BloodType {
+    A
+    B
+    AB
+    O
+}
+
+enum Role {
+    ADMIN
+    TEACHER
+    STUDENT
+    USER
+}
+
+enum MaritalStatus {
+    SINGLE
+    MARRIED
+    DIVORCED
 }
