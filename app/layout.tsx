@@ -1,4 +1,5 @@
-import db from "@/lib/db";
+import { ThemeProvider } from "@/components/theming/provider";
+import { ThemeSwitcher } from "@/components/theming/switcher";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -18,19 +19,25 @@ export const metadata: Metadata = {
   description: "Created by Joseph Opio",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const teacher = await db.teacher.findMany();
-  console.log(teacher);
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <ThemeSwitcher />
+        </ThemeProvider>
       </body>
     </html>
   );
