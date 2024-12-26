@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(cuid())
+  firstName  String
+  middleName String?
+  lastName   String
+  email      String   @unique
+  password   String
+  phone      String?  @unique
+  address    String?  @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model SchoolInfo {
+  id            String         @id @default(cuid())
+  name          String         @unique
+  address       String?        @db.Text
+  email         String?        @unique
+  phone         String?        @unique
+  website       String?        @unique
+  logo          String?
+  socialMedia   String?
+  academicYears AcademicYear[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model AcademicYear {
+  id           String      @id @default(cuid())
+  name         String      @unique
+  startDate    DateTime
+  endDate      DateTime
+  sessions     Session[]
+  SchoolInfo   SchoolInfo? @relation(fields: [schoolInfoId], references: [id])
+  schoolInfoId String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Session {
+  id              String            @id @default(cuid())
+  name            String            @unique
+  startDate       DateTime
+  endDate         DateTime
+  AcademicYear    AcademicYear?     @relation(fields: [academicYearId], references: [id])
+  academicYearId  String?
+  assessments     Assessment[]
+  teachingSubject TeachingSubject[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Class {
+  id           String       @id @default(cuid())
+  name         String
+  level        String
+  numericOrder Int          @default(100)
+  description  String?
+  assessments  Assessment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Stream {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Teacher {
+  id                String            @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String            @unique
+  phoneNumber       String?           @unique
+  dateOfBirth       DateTime
+  gender            Gender
+  maritalStatus     MaritalStatus?
+  occupation        String?
+  nationality       String?
+  addressLine1      String?
+  addressLine2      String?
+  city              String?
+  state             String?
+  postalCode        String?
+  country           String?
+  profilePictureUrl String?
+  emergencyContact  String?
+  emergencyPhone    String?
+  active            Boolean           @default(false)
+  subjectTaught     TeachingSubject[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model Parent {
+  id                String         @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String         @unique
+  phoneNumber       String?        @unique
+  dateOfBirth       DateTime
+  gender            Gender
+  maritalStatus     MaritalStatus?
+  occupation        String?
+  nationality       String?
+  addressLine1      String?
+  addressLine2      String?
+  city              String?
+  state             String?
+  postalCode        String?
+  country           String?
+  profilePictureUrl String?
+  emergencyContact  String?
+  emergencyPhone    String?
+  children          Student[]
+  active            Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Student {
+  id               String   @id @default(cuid())
+  firstName        String
+  middleName       String?
+  lastName         String
+  email            String   @unique
+  phoneNumber      String?
+  gender           Gender
+  dateOfBirth      DateTime
+  nationality      String?
+  emergencyContact String?
+  emergencyPhone   String?
+  parents          Parent[]
+  active           Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Subject {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  assessments Assessment[]
+  teacher     TeachingSubject[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Assessment {
+  id        String   @id @default(cuid())
+  title     String
+  session   Session? @relation(fields: [sessionId], references: [id])
+  sessionId String?
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  subjectId String?
+  class     Class?   @relation(fields: [classId], references: [id])
+  classId   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeachingSubject {
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  subjectId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([subjectId, teacherId, sessionId])
+}
+
+// model StudentClassStream {
+//   id String @id @default(cuid())
+// }
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  WIDOWED
+  DIVORCED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}

@@ -1,0 +1,183 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id          String   @id @default(cuid())
+    firstName   String
+    lastName    String
+    email       String   @unique
+    gender      Gender
+    nationality String?
+    phone       String?  @unique
+    address     String?  @db.Text
+    address2    String?  @db.Text
+    city        String?
+    zip         String?
+    photo       String?  @db.Text
+    birthday    DateTime
+    bloodType   String?
+    religion    String?
+    role        Role
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model Semester {
+    id            String          @id @default(cuid())
+    name          String
+    startDate     DateTime
+    endDate       DateTime
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    schoolSession SchoolSession[]
+    course        Course[]
+    examRule      ExamRule[]
+}
+
+model SchoolSession {
+    id          String        @id @default(cuid())
+    name        String
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    semester    Semester?     @relation(fields: [semesterId], references: [id])
+    semesterId  String?
+    schoolClass SchoolClass[]
+    section     Section[]
+    course      Course[]
+    promotion   Promotion[]
+    examRule    ExamRule[]
+    exam        Exam[]
+    gradeRule   GradeRule[]
+}
+
+model SchoolClass {
+    id              String         @id @default(cuid())
+    name            String
+    createdAt       DateTime       @default(now())
+    updatedAt       DateTime       @updatedAt
+    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolSessionId String?
+    section         Section[]
+    course          Course[]
+    promotion       Promotion[]
+    Mark            Mark[]
+}
+
+model Section {
+    id              String         @id @default(cuid())
+    name            String
+    roomNo          String?
+    createdAt       DateTime       @default(now())
+    updatedAt       DateTime       @updatedAt
+    schoolSessionId String?
+    schoolClassId   String?
+    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolClasses   SchoolClass?   @relation(fields: [schoolClassId], references: [id])
+    promotions      Promotion[]
+    mark            Mark[]
+}
+
+model Course {
+    id              String         @id @default(cuid())
+    name            String
+    code            String
+    description     String?
+    SchoolClass     SchoolClass?   @relation(fields: [schoolClassId], references: [id])
+    schoolClassId   String?
+    Semester        Semester?      @relation(fields: [semesterId], references: [id])
+    semesterId      String?
+    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolSessionId String?
+    Mark            Mark[]
+}
+
+model AcademicSetting {
+    id String @id @default(cuid())
+}
+
+model Student {
+    id         String      @id @default(cuid())
+    promotions Promotion[]
+    marks      Mark[]
+}
+
+model Promotion {
+    id              String         @id @default(cuid())
+    student         Student?       @relation(fields: [studentId], references: [id])
+    studentId       String?
+    schoolClass     SchoolClass?   @relation(fields: [schoolClassId], references: [id])
+    schoolClassId   String?
+    section         Section?       @relation(fields: [sectionId], references: [id])
+    sectionId       String?
+    schoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolSessionId String?
+}
+
+model ExamRule {
+    id              String         @id @default(cuid())
+    totalMarks      Float
+    passMarks       Float
+    notes           String?
+    semester        Semester?      @relation(fields: [semesterId], references: [id])
+    semesterId      String?
+    schoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolSessionId String?
+}
+
+model GradingSystem {
+    id        String      @id @default(cuid())
+    gradeRule GradeRule[]
+}
+
+model Exam {
+    id              String         @id @default(cuid())
+    marks           Mark[]
+    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolSessionId String?
+}
+
+model GradeRule {
+    id              String         @id @default(cuid())
+    point           Float
+    grade           String
+    startMarks      Float
+    endMarks        Float
+    GradingSystem   GradingSystem? @relation(fields: [gradingSystemId], references: [id])
+    gradingSystemId String?
+    SchoolSession   SchoolSession? @relation(fields: [schoolSessionId], references: [id])
+    schoolSessionId String?
+}
+
+model Mark {
+    id            String       @id @default(cuid())
+    student       Student?     @relation(fields: [studentId], references: [id])
+    studentId     String?
+    course        Course?      @relation(fields: [courseId], references: [id])
+    courseId      String?
+    schoolClass   SchoolClass? @relation(fields: [schoolClassId], references: [id])
+    schoolClassId String?
+    section       Section?     @relation(fields: [sectionId], references: [id])
+    sectionId     String?
+    exam          Exam?        @relation(fields: [examId], references: [id])
+    examId        String?
+}
+
+model Assignment {
+    id String @id @default(cuid())
+}
+
+enum Role {
+    ADMIN
+    USER
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}
