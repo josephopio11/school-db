@@ -1,5 +1,4 @@
-import { GalleryVerticalEnd, Minus, Plus } from "lucide-react";
-import * as React from "react";
+"use client";
 
 import { SearchForm } from "@/components/search-form";
 import {
@@ -20,149 +19,15 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Getting Started",
-      url: "#",
-      items: [
-        {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Building Your Application",
-      url: "#",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Community",
-      url: "#",
-      items: [
-        {
-          title: "Contribution Guide",
-          url: "#",
-        },
-      ],
-    },
-  ],
-};
+import { navData } from "@/lib/links";
+import { GalleryVerticalEnd, Minus, Plus } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import * as React from "react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -190,19 +55,52 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {data.navMain.map((item, index) => (
+            {/* <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/dashboard" className="flex items-center flex-row">
+                  <Home className=" size-4" />
+                  Dashboard
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem> */}
+            {navData.navMain.map((item) => (
               <Collapsible
                 key={item.title}
-                defaultOpen={index === 1}
+                // defaultOpen={index === item.index}
+                defaultOpen={pathname.startsWith(item.url)}
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton>
-                      {item.title}{" "}
-                      <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                      <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
-                    </SidebarMenuButton>
+                    {item.url !== "#" ? (
+                      <Link href={item.url}>
+                        <SidebarMenuButton>
+                          <span className="flex items-center flex-row">
+                            {item.icon && <item.icon className="mr-2 size-4" />}
+                            {item.title}
+                          </span>
+                          {item.items?.length && (
+                            <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
+                          )}
+                          {item.items?.length && (
+                            <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                          )}
+                        </SidebarMenuButton>
+                      </Link>
+                    ) : (
+                      <SidebarMenuButton>
+                        <span className="flex items-center flex-row">
+                          {item.icon && <item.icon className="mr-2 size-4" />}
+                          {item.title}
+                        </span>
+                        {item.items?.length && (
+                          <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
+                        )}
+                        {item.items?.length && (
+                          <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                        )}
+                      </SidebarMenuButton>
+                    )}
                   </CollapsibleTrigger>
                   {item.items?.length ? (
                     <CollapsibleContent>
@@ -211,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           <SidebarMenuSubItem key={item.title}>
                             <SidebarMenuSubButton
                               asChild
-                              isActive={item.isActive}
+                              isActive={item.url === pathname}
                             >
                               <a href={item.url}>{item.title}</a>
                             </SidebarMenuSubButton>

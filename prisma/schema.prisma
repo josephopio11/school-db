@@ -64,8 +64,6 @@ model Parent {
     postalCode        String?
     country           String?
     profilePictureUrl String?
-    emergencyContact  String?
-    emergencyPhone    String?
     children          Student[]
     active            Boolean   @default(false)
     createdAt         DateTime  @default(now())
