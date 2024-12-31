@@ -2,7 +2,7 @@ import PageHeader from "@/components/page-header";
 import StatCard2 from "@/components/stat-card2";
 import { DollarSign } from "lucide-react";
 
-export default function Page() {
+const SubjectsPage = () => {
   return (
     <>
       <PageHeader title="Statistics" />
@@ -31,4 +31,6 @@ export default function Page() {
       </div>
     </>
   );
-}
+};
+
+export default SubjectsPage;

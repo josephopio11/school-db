@@ -12,9 +12,11 @@ import { ThemeSwitcher } from "./theming/switcher";
 
 interface PageHeaderProps {
   title?: string;
+  title2?: string;
+  title3?: string;
 }
 
-const PageHeader = ({ title }: PageHeaderProps) => {
+const PageHeader = ({ title, title2, title3 }: PageHeaderProps) => {
   return (
     <header className="flex flex-row justify-between h-16 items-center gap-2 border-b px-4 sticky top-0 left-0 right-0 z-10 backdrop-blur-lg">
       <div className="flex shrink-0 items-center gap-2">
@@ -25,10 +27,30 @@ const PageHeader = ({ title }: PageHeaderProps) => {
             <BreadcrumbItem className="hidden md:block">
               <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{title}</BreadcrumbPage>
-            </BreadcrumbItem>
+            {title && (
+              <>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{title}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            )}
+            {title2 && (
+              <>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{title2}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            )}
+            {title3 && (
+              <>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{title3}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            )}
           </BreadcrumbList>
         </Breadcrumb>
       </div>

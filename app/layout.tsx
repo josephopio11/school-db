@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/theming/provider";
-import { ThemeSwitcher } from "@/components/theming/switcher";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -36,7 +36,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <ThemeSwitcher />
+          {/* <ThemeSwitcher /> */}
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

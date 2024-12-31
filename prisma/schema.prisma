@@ -26,8 +26,8 @@ model Teacher {
     email             String?           @unique
     phoneNumber       String?           @unique
     dateOfBirth       DateTime
-    gender            String
-    maritalStatus     String?
+    gender            Gender
+    maritalStatus     MaritalStatus?    @default(SINGLE)
     occupation        String?
     nationality       String?
     addressLine1      String?
@@ -47,14 +47,14 @@ model Teacher {
 }
 
 model Parent {
-    id                String    @id @default(cuid())
+    id                String         @id @default(cuid())
     firstName         String
     lastName          String
-    email             String?   @unique
-    phoneNumber       String?   @unique
+    email             String?        @unique
+    phoneNumber       String?        @unique
     dateOfBirth       DateTime
-    gender            String
-    maritalStatus     String?
+    gender            Gender
+    maritalStatus     MaritalStatus?
     occupation        String?
     nationality       String?
     addressLine1      String?
@@ -65,9 +65,9 @@ model Parent {
     country           String?
     profilePictureUrl String?
     children          Student[]
-    active            Boolean   @default(false)
-    createdAt         DateTime  @default(now())
-    updatedAt         DateTime  @updatedAt
+    active            Boolean        @default(false)
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
 }
 
 model Student {
@@ -77,7 +77,7 @@ model Student {
     lastName             String
     email                String?               @unique
     phoneNumber          String?
-    gender               String
+    gender               Gender
     dateOfBirth          DateTime
     nationality          String?
     emergencyContact     String?
@@ -91,6 +91,17 @@ model Student {
     active               Boolean               @default(false)
     createdAt            DateTime              @default(now())
     updatedAt            DateTime              @updatedAt
+}
+
+model AcademicYears {
+    id        String    @id @default(cuid())
+    name      String    @unique
+    startDate DateTime
+    endDate   DateTime
+    sessions  Session[]
+    status    Boolean   @default(false)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 }
 
 model Session {
@@ -116,6 +127,8 @@ model Session {
     gradeRules       GradeRule[]
     createdAt        DateTime          @default(now())
     updatedAt        DateTime          @updatedAt
+    AcademicYears    AcademicYears?    @relation(fields: [academicYearsId], references: [id])
+    academicYearsId  String?
 }
 
 model Semester {
@@ -138,7 +151,8 @@ model Semester {
 model Class {
     id               String            @id @default(cuid())
     name             String
-    sessionId        String
+    level            Int
+    sessionId        String?
     session          Session?          @relation(fields: [sessionId], references: [id])
     sections         Section[]
     courses          Course[]
@@ -160,8 +174,7 @@ model Section {
     id               String            @id @default(cuid())
     name             String
     roomNo           String
-    classId          String
-    class            Class             @relation(fields: [classId], references: [id])
+    class            Class[]
     sessionId        String
     session          Session           @relation(fields: [sessionId], references: [id])
     promotions       Promotion[]
@@ -295,20 +308,20 @@ model StudentAcademicInfo {
 }
 
 model Attendance {
-    id        String   @id @default(cuid())
+    id        String           @id @default(cuid())
     courseId  String
-    course    Course?  @relation(fields: [courseId], references: [id])
+    course    Course?          @relation(fields: [courseId], references: [id])
     classId   String
-    class     Class?   @relation(fields: [classId], references: [id])
+    class     Class?           @relation(fields: [classId], references: [id])
     sectionId String
-    section   Section? @relation(fields: [sectionId], references: [id])
+    section   Section?         @relation(fields: [sectionId], references: [id])
     studentId String
-    student   Student? @relation(fields: [studentId], references: [id])
+    student   Student?         @relation(fields: [studentId], references: [id])
     sessionId String
-    session   Session? @relation(fields: [sessionId], references: [id])
-    status    String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    session   Session?         @relation(fields: [sessionId], references: [id])
+    status    AttendanceStatus
+    createdAt DateTime         @default(now())
+    updatedAt DateTime         @updatedAt
 }
 
 model Notice {
@@ -460,4 +473,20 @@ enum MaritalStatus {
     MARRIED
     DIVORCED
     WIDOWED
+}
+
+enum AttendanceStatus {
+    A001 //- Absent (Medical/Illness)
+    A002 //- Absent (No Reasons)
+    A003 //- Absent (with reason)
+    A004 //- Educational/Sports Off-Site
+    A005 //- Exclusion/Suspension
+    A006 //- Free Period
+    L001 //- Late (Late Lesson)
+    L002 //- Late (Parents/Guardian)
+    L003 //- Late (School Transport)
+    P001 //- Present
+    P002 //- Present (online lesson)
+    E001 //- Study Leave/Exams
+    E002 //- Unexpected School Closure
 }
