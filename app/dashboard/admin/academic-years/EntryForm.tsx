@@ -38,14 +38,12 @@ export default function AYEntryForm() {
     },
   });
 
-  function onSubmit(values: CreateAYSchema) {
+  async function onSubmit(values: CreateAYSchema) {
     try {
       console.table(values);
-      createAcademicYear(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
+      const data = await createAcademicYear(values);
+      toast.success(
+        `Academic year ${data.name} has been created successfully.`
       );
     } catch (error) {
       console.error("Form submission error", error);

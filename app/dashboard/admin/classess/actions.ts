@@ -24,3 +24,28 @@ export async function getClassById(id: string) {
 
   return atukot;
 }
+
+// export async function createClass(data) {
+//   const atukot = await db.class.create({
+//     data,
+//   });
+
+//   return atukot;
+// }
+
+// export async function updateClass(id: string, data) {
+//   const atukot = await db.class.update({
+//     where: { id },
+//     data,
+//   });
+
+//   return atukot;
+// }
+
+// export async function deleteClass(id: string) {
+//   const atukot = await db.class.delete({
+//     where: { id },
+//   });
+
+//   return atukot;
+// }

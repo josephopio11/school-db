@@ -2,8 +2,9 @@ import PageHeader from "@/components/page-header";
 import StatCard from "@/components/stat-card";
 import { cn, formatDate } from "@/lib/utils";
 import { DollarSign } from "lucide-react";
-import AYEntryForm from "./EntryForm";
 import { getAllAcademicYears } from "./actions";
+import { ContextMenu } from "./ContextMenu";
+import AYEntryForm from "./EntryForm";
 
 const AcademicYearsPage = async () => {
   const data = await getAllAcademicYears();
@@ -33,7 +34,7 @@ const AcademicYearsPage = async () => {
         </div>
         <div className="min-h-[100vh] flex-1 rounded-xl md:min-h-min">
           <div className="grid gap-4 md:grid-cols-7 lg:grid-cols-7">
-            <div className="rounded-xl border bg-card text-card-foreground shadow md:col-span-3">
+            <div className="rounded-xl border bg-card text-card-foreground shadow md:col-span-4">
               <div className="flex flex-col space-y-1.5 p-6">
                 <div className="font-semibold leading-none tracking-tight">
                   Academic Years
@@ -74,8 +75,11 @@ const AcademicYearsPage = async () => {
                           {formatDate(ay.startDate)} - {formatDate(ay.endDate)}
                         </p>
                       </div>
-                      <div className="ml-auto font-medium">
-                        {ay.status && "Current"}
+                      <div className="ml-auto  flex flex-row items-center">
+                        <span className="font-medium text-emerald-500">
+                          {ay.status && "Current"}
+                        </span>
+                        <ContextMenu id={ay.id} />
                       </div>
                     </div>
                   ))}
@@ -83,15 +87,17 @@ const AcademicYearsPage = async () => {
               </div>
             </div>
 
-            <div className="rounded-xl border bg-card text-card-foreground shadow md:col-span-4">
-              <div className="flex flex-col space-y-1.5 p-6">
-                <div className="font-semibold leading-none tracking-tight">
-                  Add Academic Year
+            <div className="flex flex-col md:col-span-3">
+              <div className="rounded-xl border bg-card text-card-foreground shadow md:col-span-3">
+                <div className="flex flex-col space-y-1.5 p-6">
+                  <div className="font-semibold leading-none tracking-tight">
+                    Add Academic Year
+                  </div>
                 </div>
-              </div>
-              <div className="p-6 pt-0">
-                {/* THis is where the data entry form is going to be */}
-                <AYEntryForm />
+                <div className="p-6 pt-0">
+                  {/* THis is where the data entry form is going to be */}
+                  <AYEntryForm />
+                </div>
               </div>
             </div>
           </div>

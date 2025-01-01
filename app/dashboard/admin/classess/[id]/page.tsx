@@ -9,7 +9,7 @@ const ClassPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (!atukot) {
     return (
       <>
-        <PageHeader title="Classes > 404" />
+        <PageHeader title="Classes" title2="Not Found" />
         Class not found
       </>
     );

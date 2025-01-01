@@ -90,16 +90,17 @@ const ClassesPage = async () => {
                 </div>
               </div>
             </div>
-
-            <div className="rounded-xl border bg-card text-card-foreground shadow md:col-span-3">
-              <div className="flex flex-col space-y-1.5 p-6">
-                <div className="font-semibold leading-none tracking-tight">
-                  Add Class
+            <div className="flex flex-col md:col-span-3">
+              <div className="rounded-xl border bg-card text-card-foreground shadow md:col-span-3">
+                <div className="flex flex-col space-y-1.5 p-6">
+                  <div className="font-semibold leading-none tracking-tight">
+                    Add Class
+                  </div>
                 </div>
-              </div>
-              <div className="p-6 pt-0">
-                {/* THis is where the data entry form is going to be */}
-                <AYEntryForm />
+                <div className="p-6 pt-0">
+                  {/* THis is where the data entry form is going to be */}
+                  <AYEntryForm />
+                </div>
               </div>
             </div>
           </div>

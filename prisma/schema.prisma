@@ -190,14 +190,14 @@ model Section {
 
 model Course {
     id               String            @id @default(cuid())
-    name             String
+    name             String            @unique
     type             String
-    classId          String
-    class            Class             @relation(fields: [classId], references: [id])
-    semesterId       String
-    semester         Semester          @relation(fields: [semesterId], references: [id])
-    sessionId        String
-    session          Session           @relation(fields: [sessionId], references: [id])
+    classId          String?
+    class            Class?            @relation(fields: [classId], references: [id])
+    semesterId       String?
+    semester         Semester?         @relation(fields: [semesterId], references: [id])
+    sessionId        String?
+    session          Session?          @relation(fields: [sessionId], references: [id])
     assignments      Assignment[]
     finalMarks       FinalMark[]
     assignedTeachers AssignedTeacher[]
