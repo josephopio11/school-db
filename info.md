@@ -1,4 +1,6 @@
-# Attendance Key
+# Keys
+
+## Attendance Keys
 
 A001 - Absent (Medical/Illness)
 A002 - Absent (No Reasons)
@@ -13,3 +15,5 @@ P001 - Present
 P002 - Present (online lesson)
 E001 - Study Leave/Exams
 E002 - Unexpected School Closure
+
+## Others
