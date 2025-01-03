@@ -65,3 +65,13 @@ export async function setAsCurrentAcademicYear(id: string) {
     return { success: false, message: "Failed to set" };
   }
 }
+
+export async function getAcademicYearById(id: string) {
+  const academicYear = await db.academicYears.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return academicYear;
+}

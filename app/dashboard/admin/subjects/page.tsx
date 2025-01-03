@@ -10,7 +10,7 @@ const SubjectsPage = async () => {
   const data = await getAllSubjects();
   return (
     <>
-      <PageHeader title="Subjects" />
+      <PageHeader title="Subjects" link="/dashboard/admin/subjects" />
       <div className="flex flex-1 flex-col gap-4 p-4">
         <div className="grid auto-rows-min gap-4 sm:grid-cols-3">
           <StatCard2

@@ -27,8 +27,8 @@ export const navData = {
       items: [
         { title: "Statistics", url: "/dashboard/admin" },
         { title: "Academic Years", url: "/dashboard/admin/academic-years" },
-        { title: "Classes", url: "/dashboard/admin/classess" },
-        { title: "Subjects", url: "/dashboard/admin/subjects" },
+        { title: "Classes/Cohorts", url: "/dashboard/admin/classess" },
+        { title: "Subjects/Courses", url: "/dashboard/admin/subjects" },
         { title: "Teachers", url: "/dashboard/admin/teachers" },
         { title: "Parents", url: "/dashboard/admin/parents" },
         { title: "Students", url: "/dashboard/admin/students" },

@@ -81,7 +81,7 @@ const TeachersPage = async () => {
               </div>
             </div>
           </div>
-        </div>{" "}
+        </div>
       </div>
     </>
   );

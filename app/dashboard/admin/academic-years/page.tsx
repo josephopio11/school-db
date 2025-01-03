@@ -2,6 +2,7 @@ import PageHeader from "@/components/page-header";
 import StatCard from "@/components/stat-card";
 import { cn, formatDate } from "@/lib/utils";
 import { DollarSign } from "lucide-react";
+import Link from "next/link";
 import { getAllAcademicYears } from "./actions";
 import { ContextMenu } from "./ContextMenu";
 import AYEntryForm from "./EntryForm";
@@ -61,18 +62,29 @@ const AcademicYearsPage = async () => {
                       key={ay.id}
                     >
                       <span className="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9">
-                        <img
-                          className="aspect-square h-full w-full"
-                          alt="Avatar"
-                          src="https://placehold.co/400x400?text=AY"
-                        />
+                        <Link href={`/dashboard/admin/academic-years/${ay.id}`}>
+                          <img
+                            className="aspect-square h-full w-full"
+                            alt="Avatar"
+                            src="https://placehold.co/400x400?text=AY"
+                          />
+                        </Link>
                       </span>
                       <div className="ml-4 space-y-1">
                         <p className="text-base font-medium leading-none">
-                          {ay.name}
+                          <Link
+                            href={`/dashboard/admin/academic-years/${ay.id}`}
+                          >
+                            {ay.name}
+                          </Link>
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {formatDate(ay.startDate)} - {formatDate(ay.endDate)}
+                          <Link
+                            href={`/dashboard/admin/academic-years/${ay.id}`}
+                          >
+                            {formatDate(ay.startDate)} -{" "}
+                            {formatDate(ay.endDate)}
+                          </Link>
                         </p>
                       </div>
                       <div className="ml-auto  flex flex-row items-center">

@@ -12,11 +12,21 @@ import { ThemeSwitcher } from "./theming/switcher";
 
 interface PageHeaderProps {
   title?: string;
+  link?: string;
   title2?: string;
+  link2?: string;
   title3?: string;
+  link3?: string;
 }
 
-const PageHeader = ({ title, title2, title3 }: PageHeaderProps) => {
+const PageHeader = ({
+  title,
+  title2,
+  title3,
+  link,
+  link2,
+  link3,
+}: PageHeaderProps) => {
   return (
     <header className="flex flex-row justify-between h-16 items-center gap-2 border-b px-4 sticky top-0 left-0 right-0 z-10 backdrop-blur-lg">
       <div className="flex shrink-0 items-center gap-2">
@@ -25,13 +35,15 @@ const PageHeader = ({ title, title2, title3 }: PageHeaderProps) => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
+              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
             </BreadcrumbItem>
             {title && (
               <>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{title}</BreadcrumbPage>
+                  <BreadcrumbLink href={link}>
+                    <BreadcrumbPage>{title}</BreadcrumbPage>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
             )}
@@ -39,7 +51,9 @@ const PageHeader = ({ title, title2, title3 }: PageHeaderProps) => {
               <>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{title2}</BreadcrumbPage>
+                  <BreadcrumbLink href={link2}>
+                    <BreadcrumbPage>{title2}</BreadcrumbPage>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
             )}
@@ -47,7 +61,9 @@ const PageHeader = ({ title, title2, title3 }: PageHeaderProps) => {
               <>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{title3}</BreadcrumbPage>
+                  <BreadcrumbLink href={link3}>
+                    <BreadcrumbPage>{title3}</BreadcrumbPage>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
             )}

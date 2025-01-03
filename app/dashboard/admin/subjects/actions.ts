@@ -5,7 +5,11 @@ import { CreateSubjectSchema } from "@/lib/zodSchemas";
 import { revalidatePath } from "next/cache";
 
 export async function getAllSubjects() {
-  const course = await db.course.findMany();
+  const course = await db.course.findMany({
+    orderBy: {
+      type: "asc",
+    },
+  });
 
   return course;
 }
