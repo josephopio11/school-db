@@ -10,7 +10,7 @@ import { ContactInfoDialog, SchoolEditDialog } from "./SchoolEditDialog";
 const SchoolPage = async () => {
   const data = await getSchoolInformation();
   const school = data[0];
-  console.table(school);
+  // console.table(school);
   if (data.length === 0) {
     return (
       <>

@@ -42,11 +42,24 @@ export default function StudentFilters({
   streams,
   houses,
 }: UserRolesPageProps) {
+  // const params = useSearchParams();
+  // const router = useRouter();
+  // const pathname = usePathname();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    // const atukot = data.class;
+    // const subject = data.subject;
+    // const stream = data.stream;
+    // const house = data.house;
+
+    // router.push(pathname);
+
+    // console.log(atukot, subject, stream, house);
+
     toast.success(
       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -143,7 +156,7 @@ export default function StudentFilters({
             control={form.control}
             name="house"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center space-x-4">
+              <FormItem className="flex flex-row items-center space-x-4 w-1/5">
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
