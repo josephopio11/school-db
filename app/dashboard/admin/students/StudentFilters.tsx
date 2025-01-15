@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Class, Course, Section } from "@prisma/client";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const FormSchema = z.object({
@@ -43,20 +44,52 @@ export default function StudentFilters({
   houses,
 }: UserRolesPageProps) {
   // const params = useSearchParams();
-  // const router = useRouter();
-  // const pathname = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    // const atukot = data.class;
-    // const subject = data.subject;
-    // const stream = data.stream;
-    // const house = data.house;
+  function resetFilters() {
+    // form.reset();
+    router.push(`${pathname}`);
+  }
 
-    // router.push(pathname);
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    let atukot_searchparam;
+    let subject_searchparam;
+    let stream_searchparam;
+    let house_searchparam;
+
+    const atukot = data.class;
+    if (!!atukot) {
+      atukot_searchparam = `class=${atukot}`;
+    } else {
+      atukot_searchparam = "";
+    }
+    const subject = data.subject;
+    if (!!subject) {
+      subject_searchparam = `&subject=${subject}`;
+    } else {
+      subject_searchparam = "";
+    }
+    const stream = data.stream;
+    if (!!stream) {
+      stream_searchparam = `&stream=${stream}`;
+    } else {
+      stream_searchparam = "";
+    }
+    const house = data.house;
+    if (!!house) {
+      house_searchparam = `&house=${house}`;
+    } else {
+      house_searchparam = "";
+    }
+
+    router.push(
+      `${pathname}?${atukot_searchparam}${subject_searchparam}${stream_searchparam}${house_searchparam}`
+    );
 
     // console.log(atukot, subject, stream, house);
 
@@ -179,6 +212,14 @@ export default function StudentFilters({
               </FormItem>
             )}
           />
+          <Button
+            onClick={() => resetFilters}
+            variant={"outline"}
+            size={"sm"}
+            type="button"
+          >
+            Clear
+          </Button>
           <Button type="submit" variant={"outline"} size={"sm"}>
             Submit
           </Button>
